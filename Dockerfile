@@ -29,7 +29,7 @@ COPY --from=xx-build /out/ /usr/bin/
 FROM --platform=$BUILDPLATFORM public.ecr.aws/docker/library/alpine:3.21 AS taglib-build
 ARG TARGETPLATFORM
 ARG CROSS_TAGLIB_VERSION=2.0.2-1
-ENV CROSS_TAGLIB_RELEASES_URL=https://github.com/navidrome/cross-taglib/releases/download/v2.0.2-1/
+ENV CROSS_TAGLIB_RELEASES_URL=https://github.com/navidrome/cross-taglib/releases/download/v${CROSS_TAGLIB_VERSION}/
 
 RUN <<EOT
     PLATFORM=$(echo ${TARGETPLATFORM} | tr '/' '-')
@@ -121,6 +121,7 @@ COPY --from=build /out /
 ### Build Final Image
 FROM public.ecr.aws/docker/library/alpine:3.21 AS final
 LABEL maintainer="deluan@navidrome.org"
+LABEL org.opencontainers.image.source="https://github.com/navidrome/navidrome"
 
 # Install ffmpeg and mpv
 RUN apk add -U --no-cache ffmpeg mpv
@@ -133,10 +134,10 @@ ENV ND_MUSICFOLDER=/music
 ENV ND_DATAFOLDER=/data
 ENV ND_PORT=4533
 ENV GODEBUG="asyncpreemptoff=1"
+RUN touch /.nddockerenv
 
 EXPOSE ${ND_PORT}
 HEALTHCHECK CMD wget -O- http://localhost:${ND_PORT}/ping || exit 1
 WORKDIR /app
 
 ENTRYPOINT ["/app/navidrome"]
-

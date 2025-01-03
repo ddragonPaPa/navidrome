@@ -142,7 +142,7 @@ docker-msi: ##@Cross_Compilation Build MSI installer for Windows
 	docker run -it --rm -v $(PWD):/workspace -v $(PWD)/binaries:/workspace/binaries -e GIT_TAG=${GIT_TAG} \
 		navidrome-msi-builder sh -c "release/wix/build_msi.sh /workspace 386 && release/wix/build_msi.sh /workspace amd64"
 	@du -h binaries/msi/*.msi
-.PHONY: docker-msi
+.PHONY: docker-msi 
 
 package: docker-build ##@Cross_Compilation Create binaries and packages for ALL supported platforms
 	@if [ -z `which goreleaser` ]; then echo "Please install goreleaser first: https://goreleaser.com/install/"; exit 1; fi
