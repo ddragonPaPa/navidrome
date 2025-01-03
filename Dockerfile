@@ -29,7 +29,7 @@ COPY --from=xx-build /out/ /usr/bin/
 FROM --platform=$BUILDPLATFORM public.ecr.aws/docker/library/alpine:3.21 AS taglib-build
 ARG TARGETPLATFORM
 ARG CROSS_TAGLIB_VERSION=2.0.2-1
-ENV CROSS_TAGLIB_RELEASES_URL=https://github.com/navidrome/cross-taglib/releases/download/v${CROSS_TAGLIB_VERSION}/
+ENV CROSS_TAGLIB_RELEASES_URL=https://github.com/navidrome/cross-taglib/releases/download/v2.0.2-1/
 
 RUN <<EOT
     PLATFORM=$(echo ${TARGETPLATFORM} | tr '/' '-')

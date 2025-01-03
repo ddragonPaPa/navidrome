@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/navidrome/navidrome/core/scrobbler"
@@ -53,6 +54,15 @@ func (api *Router) setRating(ctx context.Context, id string, rating int) error {
 		resource = "album"
 	default:
 		repo = api.ds.MediaFile(ctx)
+		if rating == 1 {
+			mediaFile, err := repo.(model.MediaFileRepository).Get(id)
+			if err != nil {
+				return err
+			}
+			os.Remove( mediaFile.Path)
+			repo.(model.MediaFileRepository).Delete(id)
+		}
+
 		resource = "song"
 	}
 	err = repo.SetRating(rating, id)
